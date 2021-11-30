@@ -14,6 +14,16 @@ from utils import bcolors, clear
 def exit():
 	return
 
+
+def resume(character, location):
+	location.entering() # entering the location
+	print('\n')
+	print_map(location) # printing the map
+	print('\n')
+	character.print_stats()
+	print('\n')
+	character.show_inventory()
+	print('\n')
 '''
 	Function where the game loops exists
 '''
@@ -32,12 +42,16 @@ def main():
 
 	while (not exit):
 
-		location.entering()
-		print_map(location)
+		resume(character, location)
+
+		if (location.location_event(character)): # triggering a location event
+			clear()
+			resume(character, location)
+		else: 
+			...
+
+
 		location = location.changing_location()
-
-
-
 		clear()
 
 if __name__ == "__main__":

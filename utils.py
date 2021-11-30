@@ -11,6 +11,7 @@ class bcolors:
     FAIL = '\033[91m'
     ENDC = '\033[0m'
     BOLD = '\033[1m'
+    ITALIC = '\x1B[3m'
     UNDERLINE = '\033[4m'
 
     TRADER_COLOR = '\033[92m'
@@ -20,6 +21,8 @@ class bcolors:
     COIN_COLOR   = '\033[93m'
     HEALTH_COLOR = '\033[95m'
     DAMAGE_COLOR = '\033[91m'
+
+    POTION_COLOR = '\033[96m'
 
 
 # Found it here : https://stackoverflow.com/questions/517970/how-to-clear-the-interpreter-console?page=1&tab=votes#tab-top
@@ -59,8 +62,23 @@ def user_input(*options, is_int=False):
     
     except (ValueError, TypeError, AssertionError):
         print("> Bad input, try again")
-        the_user_input = user_input(*options, is_int=is_int)
+        return user_input(*options, is_int=is_int)    
     else:
-        return the_user_input    
+        return the_user_input
 
-    
+def range_input(min, max, as_int=False):
+
+    print(f"> You may choose between {min} and {max}.")
+    raw_user_input = input("> Your choice: ")
+
+    try:
+        if as_int:
+            the_user_input = int(raw_user_input)
+        else:
+            the_user_input = float(raw_user_input) 
+        assert min <= the_user_input <= max
+    except (ValueError, TypeError, AssertionError):
+        print("> Bad input, try again")
+        return range_input(min, max, as_int=as_int)    
+    else:
+        return the_user_input

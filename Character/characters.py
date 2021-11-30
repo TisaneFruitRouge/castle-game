@@ -1,5 +1,7 @@
 import random
+
 from utils import bcolors
+from Items.items import Weapon, Protection, Potion
 
 '''
 	BaseCharacter class. Used to model some basic functionnalities that all characters have
@@ -9,7 +11,7 @@ class BaseCharacter():
 	def __init__(self, max_health, base_damage, coins, ability_success_rate=0.5):
 
 		self.max_health = max_health
-		self.health_point = max_health
+		self.health_points = max_health
 		self.base_damage = base_damage
 		self.coins = coins
 		self.ability_success_rate = ability_success_rate
@@ -17,19 +19,56 @@ class BaseCharacter():
 		self.inventory = list()
 
 	def apply_damage(self, damage):
-		self.health_point -= base_damage
+		self.health_points -= base_damage
 
 	def heal(self, healing):
-		self.health_point += healing
+		self.health_points += healing
 
 	def special_ability(self):
 		return random.randrange() < self.ability_success_rate
 
 	def print_stats(self):
 
-		print(f"> {bcolors.HEALTH_COLOR}Health:{bcolors.ENDC}: {self.health_point}/{self.max_health}")
-		print(f"> {bcolors.DAMAGE_COLOR}Damage:{bcolors.ENDC}: {self.base_damage}")
-		print(f"> {bcolors.COIN_COLOR}Coins:{bcolors.ENDC}: {self.coins}")
+		print("> ==== STATS ====")
+
+		print(f"> {bcolors.HEALTH_COLOR}Health:{bcolors.ENDC} {self.health_points}/{self.max_health}")
+		print(f"> {bcolors.DAMAGE_COLOR}Damage:{bcolors.ENDC} {self.base_damage}")
+		print(f"> {bcolors.COIN_COLOR}Coins:{bcolors.ENDC} {self.coins}")
+
+	def restore_health(self, amount):
+		self.health_points = min(self.health_points+amount, self.max_health)
+		return self.health_points
+
+	def add_coins(self, coins):
+		self.coins += coins
+		return self.coins
+
+	def add_item(self, item):
+		
+		self.add_coins(-item.price) 
+
+		if (isinstance(item, Weapon)):
+			self.base_damage+=item.attack_damage
+		elif (isinstance(item, Protection)):
+			self.max_health+=item.health_boost
+			self.health_point = min(self.max_health, self.health_points+item.health_boost)
+		elif (isinstance(item, Potion)):
+			for i in self.inventory:
+				if (isinstance(i, Potion)):
+					i.amout+=item.amout
+					i.price = 25*i.amount
+					return
+		self.items.append(item)
+
+
+	def show_inventory(self):
+		print(f"> {bcolors.UNDERLINE}Inventory :{bcolors.ENDC}")
+		
+		if len(self.inventory)==0:
+			print(f"    {bcolors.ITALIC}Empty..{bcolors.ENDC}")
+		else:
+			for (idx, item) in enumerate(self.inventory):
+				print(f"{idx+1} ▹ {item}")
 
 
 '''

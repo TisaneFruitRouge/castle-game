@@ -29,11 +29,11 @@ def choose_charater():
 	rune_choice = user_input(1,2,3, is_int=True)
 
 	print("> You didn't choose the ", end="")
-	if (character_choice == 1):
+	if (rune_choice == 1):
 		print(f"{bcolors.COIN_COLOR}Gold Rune{bcolors.ENDC}\n")
-	elif (character_choice == 2):
+	elif (rune_choice == 2):
 		print(f"2 ▹ {bcolors.HEALTH_COLOR}Life Rune{bcolors.ENDC}\n")
-	elif (character_choice == 3):
+	elif (rune_choice == 3):
 		print(f"3 ▹ {bcolors.DAMAGE_COLOR}Damage Rune{bcolors.ENDC}\n")
 
 	max_health = default_values.HEALTH
