@@ -1,10 +1,12 @@
 import os
 
 from Character.meta import choose_charater
-from Locations.locations import Plain, TownSquare, Bar, Shop, BlackForest, Castle 
+from Locations.locations import Plain, Town, Bar, Shop, BlackForest, Castle 
 from Locations.locations import print_map
 
 from utils import bcolors, clear
+
+### All the ASCII Art comes from www.asciiart.eu
 
 '''
 	Exit function (also used to save the infos in a file)
@@ -26,6 +28,7 @@ def main():
 	exit = False
 
 	print("> Welcome, adventurer...")
+	clear(2)
 
 	while (not exit):
 

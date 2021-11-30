@@ -1,6 +1,6 @@
 from .characters import Thief, Trader, Orc
 
-from utils import bcolors, integer_input, default_values
+from utils import bcolors, user_input, default_values
 
 def choose_charater():
 
@@ -9,7 +9,7 @@ def choose_charater():
 	print(f"2 ▹ {bcolors.THIEF_COLOR}Thief{bcolors.ENDC}")
 	print(f"3 ▹ {bcolors.ORC_COLOR}Orc\n{bcolors.ENDC}\n")
 
-	character_choice = integer_input(1,2,3)
+	character_choice = user_input(1,2,3, is_int=True)
 
 	print("> You chose: ", end="")
 	if (character_choice == 1):
@@ -26,7 +26,7 @@ def choose_charater():
 
 	print(f"{bcolors.UNDERLINE}NOTE:{bcolors.ENDC} choose the rune you {bcolors.BOLD}DO NOT{bcolors.ENDC} want!\n")
 
-	rune_choice = integer_input(1,2,3)
+	rune_choice = user_input(1,2,3, is_int=True)
 
 	print("> You didn't choose the ", end="")
 	if (character_choice == 1):

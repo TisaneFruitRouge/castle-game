@@ -1,4 +1,5 @@
 import os
+import time
 
 # Found it here : https://stackoverflow.com/questions/287871/how-to-print-colored-text-to-the-terminal
 class bcolors:
@@ -22,9 +23,15 @@ class bcolors:
 
 
 # Found it here : https://stackoverflow.com/questions/517970/how-to-clear-the-interpreter-console?page=1&tab=votes#tab-top
-def clear():
+def clear(timeout=0):
+    time.sleep(timeout)
     os.system('cls' if os.name=='nt' else 'clear')
 
+def read_art_from_file(filename):
+    file = open(f'ascii_arts/{filename}', 'r')
+    art = file.read()
+    print(art)
+    file.close()
 
 
 class default_values:
@@ -33,22 +40,27 @@ class default_values:
     DAMAGE = 20
     COINS = 100
 
-def integer_input(*options):
+def user_input(*options, is_int=False):
 
     print("> You may choose one of these options", end=": ")
     for option in options:
         print(option, end=" ")
     print("\n")
-
     raw_user_input = input("> Your choice: ")
 
     try:
-        user_input = int(raw_user_input)
-        assert user_input in options
+        if is_int:
+            the_user_input = int(raw_user_input)
+            assert the_user_input in options
+        else:
+            the_user_input = raw_user_input
+            assert the_user_input.lower() in [option.lower() for option in options] 
+            # we lower everything to avoid problems with capital letters
+    
     except (ValueError, TypeError, AssertionError):
         print("> Bad input, try again")
-        user_input = integer_input(*options)
+        the_user_input = user_input(*options, is_int=is_int)
     else:
-        return user_input    
+        return the_user_input    
 
     
