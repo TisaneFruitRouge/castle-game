@@ -1,7 +1,10 @@
 import os
 
 from Character.meta import choose_charater
-from utils import bcolors
+from Locations.locations import Plain, TownSquare, Bar, Shop, BlackForest, Castle 
+from Locations.locations import print_map
+
+from utils import bcolors, clear
 
 '''
 	Exit function (also used to save the infos in a file)
@@ -17,7 +20,8 @@ def main():
 	print(f"{bcolors.OKCYAN}################ Welcome to the Castle Game ################{bcolors.ENDC}")
 	print("> First, you need to choose you character:")
 	
-	character_choice = choose_charater()
+	character = choose_charater()
+	location = Plain()
 
 	exit = False
 
@@ -25,9 +29,13 @@ def main():
 
 	while (not exit):
 
-		
-		
+		location.entering()
+		print_map(location)
+		location = location.changing_location()
 
+
+
+		clear()
 
 if __name__ == "__main__":
 	main()

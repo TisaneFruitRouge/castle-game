@@ -1,5 +1,5 @@
 import random
-
+from utils import bcolors
 
 '''
 	BaseCharacter class. Used to model some basic functionnalities that all characters have
@@ -23,6 +23,12 @@ class BaseCharacter():
 	def special_ability(self):
 		return random.randrange() < self.ability_success_rate
 
+	def print_stats(self):
+
+		print(f"> {bcolors.HEALTH_COLOR}Health:{bcolors.ENDC}: {self.health_point}/{self.max_health}")
+		print(f"> {bcolors.DAMAGE_COLOR}Damage:{bcolors.ENDC}: {self.base_damage}")
+		print(f"> {bcolors.COIN_COLOR}Coins:{bcolors.ENDC}: {self.coins}")
+
 
 '''
 	Trader Character
@@ -35,6 +41,10 @@ class Trader(BaseCharacter):
 	def __init__(self, max_health, base_damage, coins):
 		super().__init__(max_health, base_damage, coins+20, 0.85)
 
+
+	def print_stats(self):
+		print(f"## {bcolors.TRADER_COLOR}Trader{bcolors.ENDC} ##")
+		super().print_stats()
 	
 '''
 	Trader Character
@@ -48,6 +58,10 @@ class Thief(BaseCharacter):
 		super().__init__(max_health-20, base_damage+15, coins, 0.51)
 
 
+	def print_stats(self):
+		print(f"## {bcolors.THIEF_COLOR}Thief{bcolors.ENDC} ##")
+		super().print_stats()
+
 '''
 	Orc Character
 	Passive hability: "Tough"      -> Has more max health and more damage
@@ -57,4 +71,8 @@ class Thief(BaseCharacter):
 class Orc(BaseCharacter):
 
 	def __init__(self, max_health, base_damage, coins):
-		super().__init__(max_health+20, base_damage+20, coins, 0.3)
+		super().__init__(max_health+20, base_damage+20, coins, 0.3)	
+
+	def print_stats(self):
+		print(f"## {bcolors.ORC_COLOR}Orc{bcolors.ENDC} ##")
+		super().print_stats()

@@ -1,3 +1,6 @@
+import os
+
+# Found it here : https://stackoverflow.com/questions/287871/how-to-print-colored-text-to-the-terminal
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -13,9 +16,15 @@ class bcolors:
     THIEF_COLOR = '\033[93m'
     ORC_COLOR = '\033[91m'
 
-    GOLD_RUNE_COLOR = '\033[93m'
-    LIFE_RUNE_COLOR = '\033[95m'
-    DAMAGE_RUNE_COLOR = '\033[91m'
+    COIN_COLOR   = '\033[93m'
+    HEALTH_COLOR = '\033[95m'
+    DAMAGE_COLOR = '\033[91m'
+
+
+# Found it here : https://stackoverflow.com/questions/517970/how-to-clear-the-interpreter-console?page=1&tab=votes#tab-top
+def clear():
+    os.system('cls' if os.name=='nt' else 'clear')
+
 
 
 class default_values:
