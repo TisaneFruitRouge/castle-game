@@ -14,6 +14,8 @@ class BaseCharacter():
 		self.coins = coins
 		self.ability_success_rate = ability_success_rate
 
+		self.inventory = list()
+
 	def apply_damage(self, damage):
 		self.health_point -= base_damage
 
