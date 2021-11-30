@@ -6,9 +6,10 @@ import random
 '''
 class BaseCharacter():
 
-	def __init__(self, health_point, base_damage, coins, ability_success_rate=0.5):
+	def __init__(self, max_health, base_damage, coins, ability_success_rate=0.5):
 
-		self.health_point = health_point
+		self.max_health = max_health
+		self.health_point = max_health
 		self.base_damage = base_damage
 		self.coins = coins
 		self.ability_success_rate = ability_success_rate
@@ -31,29 +32,29 @@ class BaseCharacter():
 '''
 class Trader(BaseCharacter):
 
-	def __init__(self, health_point, base_damage, coins):
-		super().__init__(health_point, base_damage, coins+20, 0.85)
+	def __init__(self, max_health, base_damage, coins):
+		super().__init__(max_health, base_damage, coins+20, 0.85)
 
 	
 '''
 	Trader Character
-	Passive hability: "Backstab" -> applies more damage but has less health
+	Passive hability: "Backstab" -> applies more damage but has less max health
 	Special hability: "Steal" -> can try to steal an item. Has a 51% chance of success. If it fails,
 								 the thief will be expelled temporarily from the shop
 '''
 class Thief(BaseCharacter):
 
-	def __init__(self, health_point, base_damage, coins):
-		super().__init__(health_point-20, base_damage+15, coins, 0.51)
+	def __init__(self, max_health, base_damage, coins):
+		super().__init__(max_health-20, base_damage+15, coins, 0.51)
 
 
 '''
 	Orc Character
-	Passive hability: "Tough"      -> Has more health and more damage
+	Passive hability: "Tough"      -> Has more max health and more damage
 	Special hability: "Intimidate" -> when at the shop, has a 30% chance to get a free item. If it fails,
 									  prices will go up by 20%
 '''
 class Orc(BaseCharacter):
 
-	def __init__(self, health_point, base_damage, coins):
-		super().__init__(health_point+20, base_damage+20, coins, 0.3)
+	def __init__(self, max_health, base_damage, coins):
+		super().__init__(max_health+20, base_damage+20, coins, 0.3)

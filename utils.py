@@ -18,20 +18,26 @@ class bcolors:
     DAMAGE_RUNE_COLOR = '\033[91m'
 
 
+class default_values:
+
+    HEALTH = 100
+    DAMAGE = 20
+    COINS = 100
+
 def integer_input(*options):
 
-    print("You may choose one of these options", end=": ")
+    print("> You may choose one of these options", end=": ")
     for option in options:
         print(option, end=" ")
     print("\n")
 
-    raw_user_input = input("Your choice: ")
+    raw_user_input = input("> Your choice: ")
 
     try:
         user_input = int(raw_user_input)
         assert user_input in options
     except (ValueError, TypeError, AssertionError):
-        print("Bad input, try again")
+        print("> Bad input, try again")
         user_input = integer_input(*options)
     else:
         return user_input    
