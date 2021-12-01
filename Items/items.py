@@ -39,11 +39,11 @@ class Protection(BaseItem):
 
 class Potion(BaseItem):
 
-	def __init__(self, price, amout):
+	def __init__(self, price, amount):
 		super().__init__("Potions", price)
-		self.amout = amout
-		self.HP = 25
+		self.amount = amount
+		self.HP = 35
 		self.color = bcolors.POTION_COLOR
 
 	def __str__(self):
-		return super().__str__() + f" - {self.amout} times +25 HP"
+		return super().__str__() + f" - {self.amount} times +{self.HP} HP"

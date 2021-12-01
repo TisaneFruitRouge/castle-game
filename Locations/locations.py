@@ -3,7 +3,7 @@ import time
 
 from utils import user_input, range_input, read_art_from_file, bcolors, clear
 from Items.items import Weapon, Protection, Potion
-from Character.characters import Trader, Thief, Orc, Goblin
+from Character.characters import Trader, Thief, Orc, Goblin, Dragon
 
 class BaseLocation():
 
@@ -266,46 +266,11 @@ class BlackForest(BaseLocation):
 		while (not goblin.is_defeated() and not character.is_defeated() and not ran):
 
 			clear()
-			goblin.print_stats()
-
-			print("##############################\n")
-
-			character.print_stats()
-
-			print("> What do you wish to do ?")
-			print(f"1 ▹ {bcolors.DAMAGE_COLOR}Attack{bcolors.ENDC}")
-			print(f"2 ▹ {bcolors.HEALTH_COLOR}Use a potion{bcolors.ENDC}")
-			print(f"3 ▹ Run")
-
-			user_choice = user_input("Attack","Potion", "Run")
-
-			if (user_choice == "Attack"):
-				print(f"> You attack the Goblin and apply {character.base_damage} DMG to it!")
-				goblin.apply_damage(character.base_damage)
-			elif(user_choice=="Potion"):
-				if character.has_potion():
-					print(f"> You use a potion !")
-					print(f"You have now {character.use_potion()} potions!")
-				else:
-					print("> You don't have any potions !")
-			elif(user_choice=="Run"):
-				print("> You try to run")
-				if (random.random() < 0.75):
-					print("> You failed")
-				else:
-					print("> You managed to run away")
-					ran = True
-
-			time.sleep(0.5)
-
-			damages = goblin.attack()
-
-			print(f"> The goblin attacks you and deals {damages} damages!")
-			character.apply_damage(damages)	
-			time.sleep(1)
+			ran = fight(character, goblin)
 
 		if (goblin.is_defeated()):
 			print("> Congratulations! You defeated the Goblin!")
+			character.add_coins(goblin.coins)
 
 		time.sleep(1)
 		return 1
@@ -328,6 +293,68 @@ class Castle(BaseLocation):
 
 		print(f"> You are going to the {self.south_location().name} !")
 		return self.south_location()
+
+
+	def location_event(self, character):
+
+		print(">The door is locked, you need a hundred coins to enter...")
+
+		leave = False;
+
+		while (not leave):
+
+			if (not character.unlocked_door and not character.dragon_defeated):
+				print(f"1 ▹ {bcolors.COIN_COLOR}Pay 100 coins{bcolors.ENDC}")
+				print(f"2 ▹ Leave")
+
+				choice = user_input("Pay", "Leave")
+
+				if (choice == "Pay"):
+					if (character.coins < 100):
+						print("> You don't have enough coins.")
+					else:
+						print("> You unlocked the door...")
+						character.unlocked_door = True
+						time.sleep(1)
+				elif (choice == "Leave"):
+					print("> You are leaving the castle")
+					time.sleep(1)
+					leave = True
+
+			elif (not character.dragon_defeated):
+				dragon = Dragon()
+				print("> You are facing the mighty dragon who keeps the treasure.")
+
+				ran = False
+
+				while (not dragon.is_defeated() and not character.is_defeated() and not ran):
+					clear()
+					ran = fight(character, dragon)
+
+				if (dragon.is_defeated()):
+					print("> Congratulations! You defeated the Great Dragon!")
+					print("> A great treasure awaits you")
+					character.dragon_defeated = True
+
+				if (ran):
+					leave = True
+			else :
+
+				print("> This is the great treasure, take as many coins as you wish!")
+				print(f"1 ▹ {bcolors.COIN_COLOR}Take 100 coins{bcolors.ENDC}")
+				print(f"2 ▹ Leave")
+
+				choice = user_input("Take", "Leave")
+
+				if (choice == "Take"):
+					print("> You take 100 coins !")
+					character.add_coins(100)
+				elif (choice == "Leave"):
+					print("> You are leaving the castle")
+					leave = True
+	time.sleep(1)
+				
+
 
 '''
 ############# // town square map example
@@ -353,3 +380,51 @@ def print_map(location):
 	print("> #     |     #")
 	print(f"> #     {s}     #")
 	print("> #############")
+
+
+
+
+def fight(character, enemy):
+
+	ran = False
+
+	enemy.print_stats()
+
+	print("##############################\n")
+
+	character.print_stats()
+
+	print("> What do you wish to do ?")
+	print(f"1 ▹ {bcolors.DAMAGE_COLOR}Attack{bcolors.ENDC}")
+	print(f"2 ▹ {bcolors.HEALTH_COLOR}Use a potion{bcolors.ENDC}")
+	print(f"3 ▹ Run")
+
+	user_choice = user_input("Attack","Potion", "Run")
+
+	if (user_choice == "Attack"):
+		print(f"> You attack the {enemy.name} and apply {character.base_damage} DMG to it!")
+		enemy.apply_damage(character.base_damage)
+	elif(user_choice=="Potion"):
+		if character.has_potion():
+			print(f"> You use a potion !")
+			print(f"You have now {character.use_potion()} potions!")
+		else:
+			print("> You don't have any potions !")
+	elif(user_choice=="Run"):
+		print("> You try to run")
+		if (random.random() < 0.75):
+			print("> You failed")
+		else:
+			print("> You managed to run away")
+
+			ran = True
+
+	time.sleep(0.5)
+
+	damages = enemy.attack()
+
+	print(f"> The {enemy.name} attacks you and deals {damages} damages!")
+	character.apply_damage(damages)	
+	time.sleep(1)
+
+	return ran

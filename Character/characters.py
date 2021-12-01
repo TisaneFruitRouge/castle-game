@@ -21,6 +21,9 @@ class BaseCharacter():
 		self.color = ''
 		self.name = ""
 
+		self.unlocked_door = False
+		self.dragon_defeated = False
+
 	def apply_damage(self, damage):
 		self.health_points = max(self.health_points-damage, 0)
 
@@ -135,8 +138,7 @@ class Orc(BaseCharacter):
 
 
 
-
-class Goblin():
+class Enemy():
 
 	def __init__(self, max_health, damages, coins):
 		self.max_health = max_health
@@ -144,23 +146,38 @@ class Goblin():
 		self.damages = damages
 		self.coins = coins
 
+		self.name = ""
+
 	def apply_damage(self, damage):
 		self.health_points = max(self.health_points-damage, 0)
 
 	def attack(self):
-		return self.damages if random.random() > 0.2 else 0.5*self.damages
+		return self.damages if random.random() > 0.2 else 1.5*self.damages # 20% chance of critical strike (+50% damage)
 
 	def is_defeated(self):
 		return self.health_points <= 0
 
 	def print_stats(self):
 
-		read_art_from_file("goblin.txt")
+		read_art_from_file(f"{self.name.lower()}.txt")
 
-		print(f"## {bcolors.DAMAGE_COLOR}Goblin{bcolors.ENDC} ##")
+		print(f"## {bcolors.DAMAGE_COLOR}{self.name}{bcolors.ENDC} ##")
 
 		print("> ==== STATS ====")
 
 		print(f"> {bcolors.HEALTH_COLOR}Health:{bcolors.ENDC} {self.health_points}/{self.max_health}")
 		print(f"> {bcolors.DAMAGE_COLOR}Damage:{bcolors.ENDC} {self.damages}")
 		print(f"> {bcolors.COIN_COLOR}Loot:{bcolors.ENDC} {self.coins} coins\n")
+
+class Goblin(Enemy):
+
+	def __init__(self, max_health, damages, coins):
+		super().__init__(max_health, damages, coins)
+		self.name = "Goblin"
+
+
+class Dragon(Enemy):
+
+	def __init__(self, max_health=500, damages=30, coins=0):
+		super().__init__(max_health, damages, coins)
+		self.name = "Dragon"
