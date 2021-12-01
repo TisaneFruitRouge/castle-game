@@ -1,10 +1,10 @@
-import os
+import os, sys
 
 from Character.meta import choose_charater
 from Locations.locations import Plain, Town, Bar, Shop, BlackForest, Castle 
 from Locations.locations import print_map
 
-from utils import bcolors, clear
+from utils import bcolors, clear, read_art_from_file
 
 ### All the ASCII Art comes from www.asciiart.eu
 
@@ -29,7 +29,7 @@ def resume(character, location):
 '''
 def main():
 
-	print(f"{bcolors.OKCYAN}################ Welcome to the Castle Game ################{bcolors.ENDC}")
+	print(f"{bcolors.OKCYAN}################ Welcome to Treasure Hunt in Castle ################{bcolors.ENDC}")
 	print("> First, you need to choose you character:")
 	
 	character = choose_charater()
@@ -41,6 +41,10 @@ def main():
 	clear(2)
 
 	while (not exit):
+		if (character.is_defeated()):
+			read_art_from_file("death.txt")
+			print(f"{bcolors.DAMAGE_COLOR}###############################YOU DIED###############################{bcolors.ENDC}")
+			sys.exit(0)
 
 		resume(character, location)
 

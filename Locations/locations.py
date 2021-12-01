@@ -1,7 +1,9 @@
 import random
+import time
 
-from utils import user_input, range_input, read_art_from_file, bcolors
+from utils import user_input, range_input, read_art_from_file, bcolors, clear
 from Items.items import Weapon, Protection, Potion
+from Character.characters import Trader, Thief, Orc, Goblin
 
 class BaseLocation():
 
@@ -66,8 +68,6 @@ class Town(BaseLocation):
 			print(f"> You are going to the {self.east_location().name} !")
 			return self.east_location()
 
-
-
 class Bar(BaseLocation):
 
 	def __init__(self):
@@ -117,7 +117,6 @@ class Bar(BaseLocation):
 				print("> You are leaving the bar.\n")
 				exit = True
 
-
 class Shop(BaseLocation):
 
 	def __init__(self):
@@ -158,22 +157,53 @@ class Shop(BaseLocation):
 
 		list_item = (weapon, protection, potions)
 
-		print("Here are the available items :")
-		print(f"1 ▹ {weapon}")
-		print(f"2 ▹ {protection}")
-		print(f"3 ▹ {potions}\n")
-		print("4 ▹ Exit")
-
 		leaving = False
 
-		available_inputs = [1,2,3,4]
+		available_inputs = [1,2,3,4,5]
 
 		while (not leaving):
+
+			self.print_items(list_item, character, available_inputs)
+
 			item_choice = user_input(*available_inputs, is_int=True)
-			if (item_choice == 4):
+			if (item_choice == 5):
 				print("> You are leaving the shop")
 				leaving = True
+			
+			elif(item_choice == 4):
+				available_inputs.remove(4)
+				if (isinstance(character, Trader)):
+					if (character.special_ability()):
+						for item in list_item:
+							item.price = int(0.8*item.price)
+						print("> The prices went down by 20%!")
+					else:
+						for item in list_item:
+							item.price = int(1.2*item.price)
+						print("> The prices went up by 20%!")
+				elif (isinstance(character, Thief)):
+					if (character.special_ability()):
+						item = random.randint(1,3)
+						available_inputs.remove(item)
+						character.add_item(list_item[item-1], free=True)
+					
+						print(f"> You stole the {list_item[item-1]}.")
 
+					else:
+						print("> You can't steal here, leave!")
+						leaving = True
+				elif (isinstance(character, Orc)):
+					if (character.special_ability()):
+						item = random.randint(1,3)
+						available_inputs.remove(item)
+						character.add_item(list_item[item-1], free=True)
+
+						print(f"> You got the {list_item[item-1]} for free.")
+
+					else:
+						for item in list_item:
+							item.price = int(1.3*item.price)
+						print("> The prices went up by 30%!")
 			else:
 				if (character.coins >= list_item[item_choice-1].price):
 
@@ -187,6 +217,22 @@ class Shop(BaseLocation):
 
 		return 1 # signals a location event
 
+	def print_items(self, list_item, character, available_inputs):
+
+		print("Here are the available items :")
+		for i in range(1, len(list_item)+1):
+			if not (i in available_inputs):
+				print(f"{bcolors.STRIKETHROUGH}1 ▹ {list_item[i-1]}{bcolors.ENDC}")
+			else:
+				print(f"{i} ▹ {list_item[i-1]}")
+
+		hability_string = f"4 ▹ {bcolors.SPECIAL_COLOR}Special hability{bcolors.ENDC} - {character.color}{character.hability}{bcolors.ENDC}"
+
+		if (4 not in available_inputs):
+			hability_string = f"{bcolors.STRIKETHROUGH}" + hability_string + f"{bcolors.ENDC}"
+		print(hability_string)
+		
+		print("5 ▹ Exit\n")
 
 class BlackForest(BaseLocation):
 
@@ -208,6 +254,62 @@ class BlackForest(BaseLocation):
 		elif(location == "South"):
 			print(f"> You are going to the {self.south_location().name} !")
 			return self.south_location()
+
+	def location_event(self, character):
+		
+		print("> You are facing a Goblin !")
+
+		goblin = Goblin(100, 20, 35)
+
+		ran = False
+
+		while (not goblin.is_defeated() and not character.is_defeated() and not ran):
+
+			clear()
+			goblin.print_stats()
+
+			print("##############################\n")
+
+			character.print_stats()
+
+			print("> What do you wish to do ?")
+			print(f"1 ▹ {bcolors.DAMAGE_COLOR}Attack{bcolors.ENDC}")
+			print(f"2 ▹ {bcolors.HEALTH_COLOR}Use a potion{bcolors.ENDC}")
+			print(f"3 ▹ Run")
+
+			user_choice = user_input("Attack","Potion", "Run")
+
+			if (user_choice == "Attack"):
+				print(f"> You attack the Goblin and apply {character.base_damage} DMG to it!")
+				goblin.apply_damage(character.base_damage)
+			elif(user_choice=="Potion"):
+				if character.has_potion():
+					print(f"> You use a potion !")
+					print(f"You have now {character.use_potion()} potions!")
+				else:
+					print("> You don't have any potions !")
+			elif(user_choice=="Run"):
+				print("> You try to run")
+				if (random.random() < 0.75):
+					print("> You failed")
+				else:
+					print("> You managed to run away")
+					ran = True
+
+			time.sleep(0.5)
+
+			damages = goblin.attack()
+
+			print(f"> The goblin attacks you and deals {damages} damages!")
+			character.apply_damage(damages)	
+			time.sleep(1)
+
+		if (goblin.is_defeated()):
+			print("> Congratulations! You defeated the Goblin!")
+
+		time.sleep(1)
+		return 1
+
 
 
 class Castle(BaseLocation):

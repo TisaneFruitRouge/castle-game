@@ -15,9 +15,9 @@ def choose_charater():
 	if (character_choice == 1):
 		print(f"{bcolors.TRADER_COLOR}Trader{bcolors.ENDC}\n")
 	elif (character_choice == 2):
-		print(f"2 ▹ {bcolors.THIEF_COLOR}Thief{bcolors.ENDC}\n")
+		print(f"{bcolors.THIEF_COLOR}Thief{bcolors.ENDC}\n")
 	elif (character_choice == 3):
-		print(f"3 ▹ {bcolors.ORC_COLOR}Orc{bcolors.ENDC}\n")
+		print(f"{bcolors.ORC_COLOR}Orc{bcolors.ENDC}\n")
 
 	print(f"> Now, you need to select {bcolors.BOLD}2{bcolors.ENDC} of the three following runes:\n")
 	print(f"1 ▹ {bcolors.COIN_COLOR}Gold Rune{bcolors.ENDC} (+ 50 additional coins)")
@@ -32,9 +32,9 @@ def choose_charater():
 	if (rune_choice == 1):
 		print(f"{bcolors.COIN_COLOR}Gold Rune{bcolors.ENDC}\n")
 	elif (rune_choice == 2):
-		print(f"2 ▹ {bcolors.HEALTH_COLOR}Life Rune{bcolors.ENDC}\n")
+		print(f"{bcolors.HEALTH_COLOR}Life Rune{bcolors.ENDC}\n")
 	elif (rune_choice == 3):
-		print(f"3 ▹ {bcolors.DAMAGE_COLOR}Damage Rune{bcolors.ENDC}\n")
+		print(f"{bcolors.DAMAGE_COLOR}Damage Rune{bcolors.ENDC}\n")
 
 	max_health = default_values.HEALTH
 	damage = default_values.DAMAGE

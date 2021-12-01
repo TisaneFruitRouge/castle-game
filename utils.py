@@ -13,6 +13,9 @@ class bcolors:
     BOLD = '\033[1m'
     ITALIC = '\x1B[3m'
     UNDERLINE = '\033[4m'
+    STRIKETHROUGH = '\033[09m'
+
+    ######
 
     TRADER_COLOR = '\033[92m'
     THIEF_COLOR = '\033[93m'
@@ -23,6 +26,8 @@ class bcolors:
     DAMAGE_COLOR = '\033[91m'
 
     POTION_COLOR = '\033[96m'
+
+    SPECIAL_COLOR = '\033[94m'
 
 
 # Found it here : https://stackoverflow.com/questions/517970/how-to-clear-the-interpreter-console?page=1&tab=votes#tab-top

@@ -1,6 +1,6 @@
 import random
 
-from utils import bcolors
+from utils import bcolors, read_art_from_file
 from Items.items import Weapon, Protection, Potion
 
 '''
@@ -18,26 +18,43 @@ class BaseCharacter():
 
 		self.inventory = list()
 
-	def apply_damage(self, damage):
-		self.health_points -= base_damage
+		self.color = ''
+		self.name = ""
 
-	def heal(self, healing):
-		self.health_points += healing
+	def apply_damage(self, damage):
+		self.health_points = max(self.health_points-damage, 0)
 
 	def special_ability(self):
-		return random.randrange() < self.ability_success_rate
+		return random.random() < self.ability_success_rate
 
 	def print_stats(self):
+
+		print(f"## {self.color}{self.name}{bcolors.ENDC} ##")
 
 		print("> ==== STATS ====")
 
 		print(f"> {bcolors.HEALTH_COLOR}Health:{bcolors.ENDC} {self.health_points}/{self.max_health}")
 		print(f"> {bcolors.DAMAGE_COLOR}Damage:{bcolors.ENDC} {self.base_damage}")
-		print(f"> {bcolors.COIN_COLOR}Coins:{bcolors.ENDC} {self.coins}")
+		print(f"> {bcolors.COIN_COLOR}Coins:{bcolors.ENDC} {self.coins}\n")
 
 	def restore_health(self, amount):
 		self.health_points = min(self.health_points+amount, self.max_health)
 		return self.health_points
+
+	def has_potion(self):
+		for item in self.inventory:
+			if isinstance(item, Potion):
+				return True
+		return False
+
+
+	def use_potion(self):
+		for item in self.inventory:
+			if isinstance(item, Potion):
+				item.amount -= 1
+				self.restore_health(25)
+				return item.amount
+		return 0 
 
 	def add_coins(self, coins):
 		self.coins += coins
@@ -58,7 +75,7 @@ class BaseCharacter():
 					i.amout+=item.amout
 					i.price = 25*i.amount
 					return
-		self.items.append(item)
+		self.inventory.append(item)
 
 
 	def show_inventory(self):
@@ -70,6 +87,8 @@ class BaseCharacter():
 			for (idx, item) in enumerate(self.inventory):
 				print(f"{idx+1} ▹ {item}")
 
+	def is_defeated(self):
+		return self.health_points <= 0
 
 '''
 	Trader Character
@@ -81,11 +100,10 @@ class Trader(BaseCharacter):
 
 	def __init__(self, max_health, base_damage, coins):
 		super().__init__(max_health, base_damage, coins+20, 0.85)
-
-
-	def print_stats(self):
-		print(f"## {bcolors.TRADER_COLOR}Trader{bcolors.ENDC} ##")
-		super().print_stats()
+		self.name = "Trader"
+		self.hability = "Likable"
+		self.color = bcolors.TRADER_COLOR
+		
 	
 '''
 	Trader Character
@@ -97,23 +115,52 @@ class Thief(BaseCharacter):
 
 	def __init__(self, max_health, base_damage, coins):
 		super().__init__(max_health-20, base_damage+15, coins, 0.51)
-
-
-	def print_stats(self):
-		print(f"## {bcolors.THIEF_COLOR}Thief{bcolors.ENDC} ##")
-		super().print_stats()
+		self.name = "Thief"
+		self.hability = "Steal"
+		self.color = bcolors.THIEF_COLOR
 
 '''
 	Orc Character
 	Passive hability: "Tough"      -> Has more max health and more damage
 	Special hability: "Intimidate" -> when at the shop, has a 30% chance to get a free item. If it fails,
-									  prices will go up by 20%
+									  prices will go up by 35%
 '''
 class Orc(BaseCharacter):
 
 	def __init__(self, max_health, base_damage, coins):
 		super().__init__(max_health+20, base_damage+20, coins, 0.3)	
+		self.name = "Orc"
+		self.color = bcolors.ORC_COLOR
+		self.hability = "Intimidate"
+
+
+
+
+class Goblin():
+
+	def __init__(self, max_health, damages, coins):
+		self.max_health = max_health
+		self.health_points = max_health
+		self.damages = damages
+		self.coins = coins
+
+	def apply_damage(self, damage):
+		self.health_points = max(self.health_points-damage, 0)
+
+	def attack(self):
+		return self.damages if random.random() > 0.2 else 0.5*self.damages
+
+	def is_defeated(self):
+		return self.health_points <= 0
 
 	def print_stats(self):
-		print(f"## {bcolors.ORC_COLOR}Orc{bcolors.ENDC} ##")
-		super().print_stats()
+
+		read_art_from_file("goblin.txt")
+
+		print(f"## {bcolors.DAMAGE_COLOR}Goblin{bcolors.ENDC} ##")
+
+		print("> ==== STATS ====")
+
+		print(f"> {bcolors.HEALTH_COLOR}Health:{bcolors.ENDC} {self.health_points}/{self.max_health}")
+		print(f"> {bcolors.DAMAGE_COLOR}Damage:{bcolors.ENDC} {self.damages}")
+		print(f"> {bcolors.COIN_COLOR}Loot:{bcolors.ENDC} {self.coins} coins\n")
