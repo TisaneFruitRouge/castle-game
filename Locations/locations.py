@@ -1,10 +1,14 @@
 import random
+import json
 import time
 
 from utils import user_input, range_input, read_art_from_file, bcolors, clear
 from Items.items import Weapon, Protection, Potion
 from Character.characters import Trader, Thief, Orc, Goblin, Dragon
 
+'''
+	This class is parent to each location
+'''
 class BaseLocation():
 
 	def __init__(self, name, ascii_icon, north_location=None, south_location=None, west_location=None, east_location=None):
@@ -23,6 +27,10 @@ class BaseLocation():
 
 	def location_event(self, character): # default
 		return 0; # signals a default location event
+
+	# https://stackoverflow.com/questions/3768895/how-to-make-a-class-json-serializable
+	def toJSON(self):
+		return json.dumps(self.name)
 
 class Plain(BaseLocation):
 
@@ -43,7 +51,7 @@ class Plain(BaseLocation):
 class Town(BaseLocation):
 
 	def __init__(self):
-		super().__init__("Town Square", "T", BlackForest, Plain, Bar, Shop)
+		super().__init__("Town", "T", BlackForest, Plain, Bar, Shop)
 
 	def entering(self):
 		super().entering()
@@ -182,8 +190,11 @@ class Shop(BaseLocation):
 							item.price = int(1.2*item.price)
 						print("> The prices went up by 20%!")
 				elif (isinstance(character, Thief)):
-					if (character.special_ability()):
-						item = random.randint(1,3)
+					if (character.special_ability() and (1 in available_inputs or 2 in available_inputs or 3 in available_inputs)):
+						item = 0
+						while item not in available_inputs:	
+							item = random.randint(1,3)
+						
 						available_inputs.remove(item)
 						character.add_item(list_item[item-1], free=True)
 					
@@ -222,7 +233,7 @@ class Shop(BaseLocation):
 		print("Here are the available items :")
 		for i in range(1, len(list_item)+1):
 			if not (i in available_inputs):
-				print(f"{bcolors.STRIKETHROUGH}1 ▹ {list_item[i-1]}{bcolors.ENDC}")
+				print(f"{bcolors.STRIKETHROUGH}{i} ▹ {list_item[i-1]}{bcolors.ENDC}")
 			else:
 				print(f"{i} ▹ {list_item[i-1]}")
 

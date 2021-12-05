@@ -6,6 +6,8 @@ from Locations.locations import print_map
 
 from utils import bcolors, clear, read_art_from_file
 
+from save.save import save_data, read_character, read_location
+
 ### All the ASCII Art comes from www.asciiart.eu
 
 '''
@@ -30,10 +32,16 @@ def resume(character, location):
 def main():
 
 	print(f"{bcolors.OKCYAN}################ Welcome to Treasure Hunt in Castle ################{bcolors.ENDC}")
-	print("> First, you need to choose you character:")
 	
-	character = choose_charater()
-	location = Plain()
+	if (os.path.isfile('save/character.json')):
+		character = read_character()
+	else: 
+		character = choose_charater()
+	
+	if (os.path.isfile('save/location.json')):
+		location = read_location()
+	else: 
+		location = Plain()
 
 	exit = False
 
@@ -54,8 +62,8 @@ def main():
 		else: 
 			...
 
-
 		location = location.changing_location()
+		save_data(character, location)
 		clear()
 
 if __name__ == "__main__":

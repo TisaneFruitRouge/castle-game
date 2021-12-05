@@ -1,4 +1,5 @@
 import random
+import json
 
 from utils import bcolors, read_art_from_file
 from Items.items import Weapon, Protection, Potion
@@ -24,12 +25,21 @@ class BaseCharacter():
 		self.unlocked_door = False
 		self.dragon_defeated = False
 
+	'''
+		Applies damage to the character
+	'''
 	def apply_damage(self, damage):
 		self.health_points = max(self.health_points-damage, 0)
 
+	'''
+		Return a boolean idicating if the special hability worked
+	'''
 	def special_ability(self):
 		return random.random() < self.ability_success_rate
 
+	'''
+		Prints the character's statistics
+	'''
 	def print_stats(self):
 
 		print(f"## {self.color}{self.name}{bcolors.ENDC} ##")
@@ -40,10 +50,16 @@ class BaseCharacter():
 		print(f"> {bcolors.DAMAGE_COLOR}Damage:{bcolors.ENDC} {self.base_damage}")
 		print(f"> {bcolors.COIN_COLOR}Coins:{bcolors.ENDC} {self.coins}\n")
 
+	'''
+		Give a certain amount of health back
+	'''
 	def restore_health(self, amount):
 		self.health_points = min(self.health_points+amount, self.max_health)
 		return self.health_points
 
+	'''
+		Loops over the inventory, returns True if there is a potion, False otherwise
+	'''
 	def has_potion(self):
 		for item in self.inventory:
 			if isinstance(item, Potion):
@@ -51,6 +67,9 @@ class BaseCharacter():
 		return False
 
 
+	'''
+		Uses a potion
+	'''
 	def use_potion(self):
 		for item in self.inventory:
 			if isinstance(item, Potion):
@@ -59,13 +78,20 @@ class BaseCharacter():
 				return item.amount
 		return 0 
 
+	'''
+		Adds coins to the character's purse
+	'''
 	def add_coins(self, coins):
 		self.coins += coins
 		return self.coins
 
-	def add_item(self, item):
+	'''
+		Adds an item to the inventory
+	'''
+	def add_item(self, item, free=False):
 		
-		self.add_coins(-item.price) 
+		if (not free):
+			self.add_coins(-item.price) 	
 
 		if (isinstance(item, Weapon)):
 			self.base_damage+=item.attack_damage
@@ -80,7 +106,9 @@ class BaseCharacter():
 					return
 		self.inventory.append(item)
 
-
+	'''
+		Prints the inventory
+	'''
 	def show_inventory(self):
 		print(f"> {bcolors.UNDERLINE}Inventory :{bcolors.ENDC}")
 		
@@ -90,8 +118,13 @@ class BaseCharacter():
 			for (idx, item) in enumerate(self.inventory):
 				print(f"{idx+1} ▹ {item}")
 
+	'''
+		Returns True if the health points are below 0
+	'''
 	def is_defeated(self):
 		return self.health_points <= 0
+
+
 
 '''
 	Trader Character
@@ -131,13 +164,15 @@ class Thief(BaseCharacter):
 class Orc(BaseCharacter):
 
 	def __init__(self, max_health, base_damage, coins):
-		super().__init__(max_health+20, base_damage+20, coins, 0.3)	
+		super().__init__(max_health+20, base_damage+10, coins, 0.3)	
 		self.name = "Orc"
 		self.color = bcolors.ORC_COLOR
 		self.hability = "Intimidate"
 
 
-
+'''
+	Class for an Enemy
+'''
 class Enemy():
 
 	def __init__(self, max_health, damages, coins):
@@ -148,15 +183,27 @@ class Enemy():
 
 		self.name = ""
 
+	'''
+		Applies damage to the enemy object
+	'''
 	def apply_damage(self, damage):
 		self.health_points = max(self.health_points-damage, 0)
 
+	'''
+		Return a certain amount of damage
+	'''
 	def attack(self):
 		return self.damages if random.random() > 0.2 else 1.5*self.damages # 20% chance of critical strike (+50% damage)
 
+	'''
+		Returns True if the health points are below 0
+	'''
 	def is_defeated(self):
 		return self.health_points <= 0
 
+	'''
+		Prints the enemy's statistics
+	'''
 	def print_stats(self):
 
 		read_art_from_file(f"{self.name.lower()}.txt")
@@ -169,13 +216,18 @@ class Enemy():
 		print(f"> {bcolors.DAMAGE_COLOR}Damage:{bcolors.ENDC} {self.damages}")
 		print(f"> {bcolors.COIN_COLOR}Loot:{bcolors.ENDC} {self.coins} coins\n")
 
+'''
+	Goblin (encounter one goblin each time you go if the black forest)
+'''
 class Goblin(Enemy):
 
 	def __init__(self, max_health, damages, coins):
 		super().__init__(max_health, damages, coins)
 		self.name = "Goblin"
 
-
+'''
+	Dragon (Final boss, inside the castle)
+'''
 class Dragon(Enemy):
 
 	def __init__(self, max_health=500, damages=30, coins=0):

@@ -1,5 +1,7 @@
 import os
 import time
+import json
+
 
 # Found it here : https://stackoverflow.com/questions/287871/how-to-print-colored-text-to-the-terminal
 class bcolors:
@@ -36,7 +38,8 @@ def clear(timeout=0):
     os.system('cls' if os.name=='nt' else 'clear')
 
 def read_art_from_file(filename):
-    file = open(f'ascii_arts/{filename}', 'r')
+    #file = open(f'{os.getcwd()}{os.path.sep}ascii_arts{os.path.sep}{filename}', 'r')
+    file = open(os.path.join(os.getcwd(), "ascii_arts", filename))
     art = file.read()
     print(art)
     file.close()

@@ -1,13 +1,16 @@
 from utils import bcolors
 
+'''
+	BaseItem class
+'''
 class BaseItem():
 
-	def __init__(self, name, price):
+	def __init__(self, name, price, color=bcolors.OKBLUE):
 
 		self.name = name
 		self.price = price
 
-		self.color = bcolors.OKBLUE
+		self.color = color
 
 	def __str__(self):
 		return f"{self.color}{self.name}{bcolors.ENDC} - Price: {self.price} coins"

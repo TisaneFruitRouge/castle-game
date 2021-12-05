@@ -2,12 +2,18 @@ from .characters import Thief, Trader, Orc
 
 from utils import bcolors, user_input, default_values
 
+'''
+	This function is used to ask the player to create their character
+	They can choose among 3 classes : Trader, Thief and Orc and choose 
+	2 out of 3 runes: Gold, Life and Damage
+'''
 def choose_charater():
 
+	print("> First, you need to choose you character:")
 	print(f"> You can choose between {bcolors.BOLD}3{bcolors.ENDC} characters:\n")
-	print(f"1 ▹ {bcolors.TRADER_COLOR}Trader{bcolors.ENDC}")
-	print(f"2 ▹ {bcolors.THIEF_COLOR}Thief{bcolors.ENDC}")
-	print(f"3 ▹ {bcolors.ORC_COLOR}Orc\n{bcolors.ENDC}\n")
+	print(f"1 ▹ {bcolors.TRADER_COLOR}Trader{bcolors.ENDC} (100HP / 20 DMG / 120 COINS) {bcolors.UNDERLINE}Special Ability:{bcolors.ENDC} Likable")
+	print(f"2 ▹ {bcolors.THIEF_COLOR}Thief{bcolors.ENDC} (80HP / 35 DMG / 100 COINS) {bcolors.UNDERLINE}Special Ability:{bcolors.ENDC} Steal")
+	print(f"3 ▹ {bcolors.ORC_COLOR}Orc{bcolors.ENDC} (120HP / 30 DMG / 120 COINS) {bcolors.UNDERLINE}Special Ability:{bcolors.ENDC} Intimidate\n")
 
 	character_choice = user_input(1,2,3, is_int=True)
 
@@ -51,6 +57,7 @@ def choose_charater():
 		damage+=10
 
 	if (character_choice==1):
+		a = Trader(max_health, damage, coins)
 		return Trader(max_health, damage, coins)
 	elif (character_choice==2):
 		return Thief(max_health, damage, coins)
