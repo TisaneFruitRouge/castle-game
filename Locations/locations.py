@@ -1,5 +1,4 @@
 import random
-import json
 import time
 
 from utils import user_input, range_input, read_art_from_file, bcolors, clear
@@ -20,17 +19,13 @@ class BaseLocation():
 		self.east_location = east_location
 
 	def entering(self):
-		print(f"> You arrived to to the {self.name}")
+		print(f"> You arrived to the {self.name}")
 
 	def changing_location(self):
 		print("> Where do you wish to go ?")
 
 	def location_event(self, character): # default
 		return 0; # signals a default location event
-
-	# https://stackoverflow.com/questions/3768895/how-to-make-a-class-json-serializable
-	def toJSON(self):
-		return json.dumps(self.name)
 
 class Plain(BaseLocation):
 
@@ -347,7 +342,7 @@ class Castle(BaseLocation):
 					print("> A great treasure awaits you")
 					character.dragon_defeated = True
 
-				if (ran):
+				if (ran or character.is_defeated()):
 					leave = True
 			else :
 

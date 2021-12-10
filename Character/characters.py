@@ -1,5 +1,4 @@
 import random
-import json
 
 from utils import bcolors, read_art_from_file
 from Items.items import Weapon, Protection, Potion
@@ -25,6 +24,8 @@ class BaseCharacter():
 		self.unlocked_door = False
 		self.dragon_defeated = False
 
+		self.username = ""
+
 	'''
 		Applies damage to the character
 	'''
@@ -42,7 +43,7 @@ class BaseCharacter():
 	'''
 	def print_stats(self):
 
-		print(f"## {self.color}{self.name}{bcolors.ENDC} ##")
+		print(f"## {self.color}{self.name}{bcolors.ENDC}: {self.username} ##")
 
 		print("> ==== STATS ====")
 
@@ -230,6 +231,6 @@ class Goblin(Enemy):
 '''
 class Dragon(Enemy):
 
-	def __init__(self, max_health=500, damages=30, coins=0):
+	def __init__(self, max_health=1, damages=30, coins=0):
 		super().__init__(max_health, damages, coins)
 		self.name = "Dragon"

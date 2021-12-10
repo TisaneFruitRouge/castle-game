@@ -4,22 +4,22 @@ from Character.characters import Trader, Thief, Orc
 from Locations.locations import Plain, Town, Bar, Shop, BlackForest, Castle
 from Items.items import Weapon, Protection, Potion
 
-# https://stackoverflow.com/questions/12309269/how-do-i-write-json-data-to-a-file
-def save_data(character, location):
+def save_data(character, location, name):
     
-    with open('c:\\Users\\wrsah\Downloads\\game\\castle-game\\save\\character.txt', 'w') as character_save:
+    #with open('c:\\Users\\wrsah\Downloads\\game\\castle-game\\save\\save.txt', 'rw') as save_save:
+    with open(f'/home/vincent/Travail/Fiverr/castle-game/save/{name}.txt', 'w') as character_save:  
         char_dict = dict(character.__dict__)
         char_dict["inventory"] = []
         for item in character.inventory:
             char_dict["inventory"].append(dict(item.__dict__))
+        print(location)
+        char_dict["location"] = location.name
         character_save.write(str(char_dict))
-
-    with open('c:\\Users\\wrsah\Downloads\\game\\castle-game\\save\\location.txt', 'w') as location_save:
-        location_save.write(location.name)
-
-def read_character():
-    with open('c:\\Users\\wrsah\Downloads\\game\\castle-game\\save\\character.txt') as character_data:
-        data = eval(character_data.read())
+        
+def read_save(name):
+    # with open('c:\\Users\\wrsah\Downloads\\game\\castle-game\\save\\save.txt', 'r') as save_data:
+    with open(f'/home/vincent/Travail/Fiverr/castle-game/save/{name}.txt', 'r') as save_data:  
+        data = eval(save_data.read())
 
         items_data = data["inventory"]
         items = []
@@ -47,16 +47,15 @@ def read_character():
         character.unlocked_door = data["unlocked_door"]
         character.dragon_defeated = data["dragon_defeated"]
 
-        return character
+        character.username = data["username"]
 
-def read_location():
-    location_dict = {"Plain": Plain,
-                     "Town": Town,
-                     "Bar": Bar,
-                     "Shop": Shop,
-                     "BlackForest": BlackForest,
-                     "Castle": Castle}
+        location_dict = {
+            "Plain":Plain,
+            "Town":Town,
+            "Bar":Bar,
+            "Shop":Shop,
+            "Black Forest":BlackForest,
+            "Castle": Castle
+        }
 
-    with open('c:\\Users\\wrsah\Downloads\\game\\castle-game\\save\\location.txt') as location_data:
-        data = eval(location_data.read())
-        return location_dict[data]()
+        return (character, location_dict[data["location"]]())

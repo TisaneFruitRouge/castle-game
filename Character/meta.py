@@ -7,7 +7,7 @@ from utils import bcolors, user_input, default_values
 	They can choose among 3 classes : Trader, Thief and Orc and choose 
 	2 out of 3 runes: Gold, Life and Damage
 '''
-def choose_charater():
+def choose_charater(name):
 
 	print("> First, you need to choose you character:")
 	print(f"> You can choose between {bcolors.BOLD}3{bcolors.ENDC} characters:\n")
@@ -46,6 +46,7 @@ def choose_charater():
 	damage = default_values.DAMAGE
 	coins  = default_values.COINS
 
+
 	if (rune_choice == 1):
 		max_health+=15
 		damage+=10
@@ -57,9 +58,14 @@ def choose_charater():
 		damage+=10
 
 	if (character_choice==1):
-		a = Trader(max_health, damage, coins)
-		return Trader(max_health, damage, coins)
+		char = Trader(max_health, damage, coins)
+		char.username = name
+		return char
 	elif (character_choice==2):
-		return Thief(max_health, damage, coins)
+		char = Thief(max_health, damage, coins)
+		char.username = name
+		return char
 	elif (character_choice==3):
-		return Orc(max_health, damage, coins)
+		char = Orc(max_health, damage, coins)
+		char.username = name
+		return char

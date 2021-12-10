@@ -1,6 +1,5 @@
 import os
 import time
-import json
 
 
 # Found it here : https://stackoverflow.com/questions/287871/how-to-print-colored-text-to-the-terminal
@@ -53,9 +52,11 @@ class default_values:
 
 def user_input(*options, is_int=False):
 
+
     print("> You may choose one of these options", end=": ")
     for option in options:
         print(option, end=" ")
+    
     print("\n")
     raw_user_input = input("> Your choice: ")
 
@@ -64,8 +65,8 @@ def user_input(*options, is_int=False):
             the_user_input = int(raw_user_input)
             assert the_user_input in options
         else:
-            the_user_input = raw_user_input
-            assert the_user_input.lower() in [option.lower() for option in options] 
+            the_user_input = raw_user_input.lower().capitalize()
+            assert the_user_input in options
             # we lower everything to avoid problems with capital letters
     
     except (ValueError, TypeError, AssertionError):
